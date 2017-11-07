@@ -11,12 +11,19 @@ there are changes or failures
 ### Setup
 
 - Install the module
-- In the master, enable the http_summary report in puppet.conf and provide url to post reports to:
+- In the master, enable the http_summary report in puppet.conf:
 
 ```
 [master]
 reports = puppetdb,http_summary
-reporturl = http://localhost:8888/
+```
+
+- Place a file in $confdir/http_summary.yaml containing url to connect to:
+
+```
+root@puppet::master /root> cat /etc/puppetlabs/puppet/http_summary.yaml
+---
+url: "http://localhost:8888"
 ```
 
 - Run puppet agent in the master

@@ -6,8 +6,20 @@ require 'json'
 Puppet::Reports.register_report(:http_summary) do
   desc "Process aggregated stats from a Puppet report and post them to HTTP"
 
+  def read_config
+    configfile = File.join([File.dirname(Puppet.settings[:config]), "http_summary.yaml"])
+    raise(Puppet::ParseError, "http_summary report config file #{configfile} not readable") unless File.exist?(configfile)
+    begin
+      config = YAML.load_file(configfile)
+    rescue TypeError => e
+      raise Puppet::ParserError, "http_summary file #{configfile} is not valid YAML!"
+    end
+    config
+  end
+
   def process
-    url  = URI.parse(Puppet[:reporturl])
+    config = read_config
+    url  = URI.parse(config['url'])
     headers = { "Content-Type" => "application/json" }
 
     options = { :metric_id => [:puppet, :report, :http] }
@@ -36,10 +48,6 @@ Puppet::Reports.register_report(:http_summary) do
     end
   end
 
-
-# Finished puppet run on 10-32-175-155.rfc1918.puppetlabs.net - Success!
-# Resource events: 0 failed 2 changed 1,115 unchanged 0 skipped 0 noop
-# Report: https://10-32-175-155.rfc1918.puppetlabs.net/#/run/jobs/5/nodes/10-32-175-155.rfc1918.puppetlabs.net/report
   def parse_report(report)
     metrics = {}
     body = {}
