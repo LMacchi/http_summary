@@ -18,14 +18,21 @@ Puppet::Reports.register_report(:http_summary) do
       }
     end
     use_ssl = url.scheme == 'https'
+    
+    self.status != nil ? status = self.status : status = 'undefined'
 
-    processed_report = parse_report(self)
+    if status == 'failed' or status == 'changed'
+    
+      processed_report = parse_report(self)
 
-    Puppet.notice "Attempting to send report to #{url.to_s}"
-    conn = Puppet::Network::HttpPool.http_instance(url.host, url.port, use_ssl)
-    response = conn.post(url.path, processed_report, headers, options)
-    unless response.kind_of?(Net::HTTPSuccess)
-      Puppet.err "Unable to submit report to #{url.to_s} - error #{response.code}: #{response.msg}"
+      conn = Puppet::Network::HttpPool.http_instance(url.host, url.port, use_ssl)
+      response = conn.post(url.path, processed_report, headers, options)
+
+      if ! response.kind_of?(Net::HTTPSuccess)
+        Puppet.err "Unable to submit report to #{url.to_s} - error #{response.code}: #{response.msg}"
+      else
+        Puppet.notice "Report successfully sent to #{url.to_s}"
+      end
     end
   end
 
@@ -36,7 +43,6 @@ Puppet::Reports.register_report(:http_summary) do
   def parse_report(report)
     metrics = {}
     body = {}
-    report.status != nil ? status = report.status : status = 'undefined'
 
     resources = report.metrics['resources'].values
     resources.each do |resource|
@@ -45,7 +51,7 @@ Puppet::Reports.register_report(:http_summary) do
 
     body['host'] = report.host
     body['time'] = report.time
-    body['status'] = status
+    body['status'] = report.status
     body['totalResources'] = metrics['total']
     body['changedResources'] = metrics['changed']
     body['failedResources'] = metrics['failed']
