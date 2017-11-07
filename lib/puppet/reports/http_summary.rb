@@ -19,7 +19,7 @@ Puppet::Reports.register_report(:http_summary) do
     end
     use_ssl = url.scheme == 'https'
 
-    processed_report = JSON.parse(parse_report(self))
+    processed_report = parse_report(self)
 
     Puppet.notice "Attempting to send report to #{url.to_s}"
     conn = Puppet::Network::HttpPool.http_instance(url.host, url.port, use_ssl)
