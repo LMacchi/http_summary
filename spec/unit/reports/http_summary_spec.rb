@@ -11,6 +11,8 @@ describe http_summary do
 
   let(:http) { stub_everything "http" }
   let(:httpok) { Net::HTTPOK.new('1.1', 200, '') }
+  let(:host) { 'laura.puppetlabs.vm' }
+  let(:time) { '2017-11-06T21:44:40.258493862Z' }
   
   before :each do
     File.stubs(:exist?).with('/dev/null/http_summary.yaml').returns(true)
@@ -64,12 +66,12 @@ describe http_summary do
   describe "when parsing reports" do
 
     it "should return the right json object" do
-      processor.expects(:host).returns('laura.puppetlabs.vm')
-      processor.expects(:time).returns('2017-11-06T21:44:40.258493862Z')
+      processor.expects(:host).returns(host)
+      processor.expects(:time).returns(time)
       processor.expects(:status).returns('changed')
       processor.add_metric(:resources, {"total" => 178, "failed" => 0, "changed" => 1})
 
-      response = {"host":"laura.puppetlabs.vm","time":"2017-11-06T21:44:40.258493862Z","status":"changed","totalResources":178,"changedResources":1,"failedResources":0}
+      response = {"host":"#{host}","time":"#{time}","status":"changed","totalResources":178,"changedResources":1,"failedResources":0}
 
       expect(processor.parse_report(processor)).to eq(response.to_json)
     end
