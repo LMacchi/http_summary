@@ -1,0 +1,174 @@
+--- !ruby/object:Puppet::Transaction::Report
+host: 10-32-175-182.rfc1918.puppetlabs.net
+time: '2017-11-06T21:44:40.258493862Z'
+configuration_version: 907bbe8f684b87a7864a3b15bcd638a333cc2d60
+transaction_uuid: 6b8700a5-1555-432b-a567-6b5a37f447b9
+report_format: 7
+puppet_version: 5.3.2
+status: changed
+noop: false
+noop_pending: false
+environment: production
+logs:
+- level: info
+  message: Using configured environment 'production'
+  source: Puppet
+  tags:
+  - info
+  time: '2017-11-06T21:44:40.568432193Z'
+  file:
+  line:
+- level: info
+  message: Retrieving pluginfacts
+  source: Puppet
+  tags:
+  - info
+  time: '2017-11-06T21:44:40.569007593Z'
+  file:
+  line:
+- level: info
+  message: Retrieving plugin
+  source: Puppet
+  tags:
+  - info
+  time: '2017-11-06T21:44:40.678276744Z'
+  file:
+  line:
+- level: info
+  message: Loading facts
+  source: Puppet
+  tags:
+  - info
+  time: '2017-11-06T21:44:43.324622691Z'
+  file:
+  line:
+- level: info
+  message: Caching catalog for 10-32-175-182.rfc1918.puppetlabs.net
+  source: Puppet
+  tags:
+  - info
+  time: '2017-11-06T21:44:45.932883384Z'
+  file:
+  line:
+- level: info
+  message: Applying configuration version '907bbe8f684b87a7864a3b15bcd638a333cc2d60'
+  source: Puppet
+  tags:
+  - info
+  time: '2017-11-06T21:44:46.450410824Z'
+  file:
+  line:
+- level: notice
+  message: My master is 10-32-175-155.rfc1918.puppetlabs.net
+  source: Puppet
+  tags:
+  - notice
+  time: '2017-11-06T21:44:46.510262508Z'
+  file:
+  line:
+- level: notice
+  message: defined 'message' as 'My master is 10-32-175-155.rfc1918.puppetlabs.net'
+  source: "/Stage[main]/Main/Node[default]/Notify[My master is 10-32-175-155.rfc1918.puppetlabs.net]/message"
+  tags:
+  - notice
+  - notify
+  - node
+  - default
+  - class
+  time: '2017-11-06T21:44:46.511168821Z'
+  file: "/etc/puppetlabs/code/environments/production/manifests/site.pp"
+  line: 33
+- level: notice
+  message: Applied catalog in 0.72 seconds
+  source: Puppet
+  tags:
+  - notice
+  time: '2017-11-06T21:44:47.118180898Z'
+  file:
+  line:
+metrics:
+  resources:
+    name: resources
+    label: Resources
+    values:
+    - - total
+      - Total
+      - 178
+    - - skipped
+      - Skipped
+      - 0
+    - - failed
+      - Failed
+      - 0
+    - - failed_to_restart
+      - Failed to restart
+      - 0
+    - - restarted
+      - Restarted
+      - 0
+    - - changed
+      - Changed
+      - 1
+    - - out_of_sync
+      - Out of sync
+      - 1
+    - - scheduled
+      - Scheduled
+      - 0
+    - - corrective_change
+      - Corrective change
+      - 0
+  time:
+    name: time
+    label: Time
+    values:
+    - - notify
+      - Notify
+      - 0.001331657
+    - - pe_anchor
+      - Pe anchor
+      - 9.0441e-05
+    - - file
+      - File
+      - 0.18296778799999994
+    - - service
+      - Service
+      - 0.019785001
+    - - exec
+      - Exec
+      - 0.000168501
+    - - cron
+      - Cron
+      - 0.002475329
+    - - schedule
+      - Schedule
+      - 0.00043117700000000004
+    - - filebucket
+      - Filebucket
+      - 8.3528e-05
+    - - config_retrieval
+      - Config retrieval
+      - 0.6982632379995266
+    - - total
+      - Total
+      - 0.9055966599995265
+  changes:
+    name: changes
+    label: Changes
+    values:
+    - - total
+      - Total
+      - 1
+  events:
+    name: events
+    label: Events
+    values:
+    - - total
+      - Total
+      - 1
+    - - failure
+      - Failure
+      - 0
+    - - success
+      - Success
+      - 1
