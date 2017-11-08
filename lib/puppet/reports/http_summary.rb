@@ -33,7 +33,7 @@ Puppet::Reports.register_report(:http_summary) do
     
     self.status != nil ? status = self.status : status = 'undefined'
 
-    if status == 'failed' or status == 'changed'
+    if ['failed','changed'].include? status
     
       processed_report = parse_report(self)
 
@@ -52,17 +52,12 @@ Puppet::Reports.register_report(:http_summary) do
     metrics = {}
     body = {}
 
-    resources = report.metrics['resources'].values
-    resources.each do |resource|
-      metrics[resource[0]] = resource[2]
-    end
-
     body['host'] = report.host
     body['time'] = report.time
     body['status'] = report.status
-    body['totalResources'] = metrics['total']
-    body['changedResources'] = metrics['changed']
-    body['failedResources'] = metrics['failed']
+    body['totalResources'] = report.metrics['resources']['total']
+    body['changedResources'] = report.metrics['resources']['changed']
+    body['failedResources'] = report.metrics['resources']['failed']
 
     return body.to_json
   end
