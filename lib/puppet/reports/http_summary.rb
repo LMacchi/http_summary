@@ -40,9 +40,11 @@ Puppet::Reports.register_report(:http_summary) do
   end
 
   def send(message)
-    url = URI.parse(read_config['url'])
-
-    raise Puppet::ParseError, "http_summary file #{configfile} is not valid YAML!" unless !url.nil?
+    begin
+      url = URI.parse(read_config['url'])
+    rescue URI::InvalidURIError
+      raise Puppet::ParserError, "Could not find valid url in #{configfile}"
+    end
 
     headers, options, use_ssl = calculate_defaults(url)
 
