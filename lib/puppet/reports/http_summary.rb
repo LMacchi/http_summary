@@ -42,7 +42,7 @@ Puppet::Reports.register_report(:http_summary) do
   def send(message)
     begin
       url = URI.parse(read_config['url'])
-    rescue URI::InvalidURIError, BadURIError
+    rescue URI::InvalidURIError, URI::BadURIError
       raise Puppet::ParseError, "Could not find valid url in #{configfile}"
     end
 
