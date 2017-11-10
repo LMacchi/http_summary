@@ -43,7 +43,7 @@ Puppet::Reports.register_report(:http_summary) do
     begin
       url = URI.parse(read_config['url'])
     rescue URI::InvalidURIError, URI::BadURIError
-      raise Puppet::ParseError, "Could not find valid url in #{configfile}"
+      raise Puppet::ParseError, 'Could not find valid url in configuration file'
     end
 
     headers, options, use_ssl = calculate_defaults(url)
