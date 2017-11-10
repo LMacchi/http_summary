@@ -1,78 +1,56 @@
 require 'spec_helper'
 require 'puppet/reports'
+require 'yaml'
 
 http_summary = Puppet::Reports.report(:http_summary)
 
 describe http_summary do
-  let(:processor) do
-    processor = Puppet::Transaction::Report.new('apply')
-    processor.extend(http_summary)
-  end
+  context 'with an unchanged report' do
+    let(:unchanged) do
+      f = my_fixture 'report_unchanged.yaml'
+      YAML.load_file(f)
+    end
+    let(:u_processor) do
+      u_processor = Puppet::Transaction::Report.new('apply')
+      u_processor.extend(http_summary) 
+    end
 
-  let(:http) { stub_everything 'http' }
-  let(:httpok) { Net::HTTPOK.new('1.1', 200, '') }
-  let(:host) { 'laura.puppetlabs.vm' }
-  let(:time) { '2017-11-06T21:44:40.258493862Z' }
-  let(:resources) { { 'total' => 178, 'failed' => 0, 'changed' => 1 } }
-  before :each do
-    File.stubs(:exist?).with('/dev/null/http_summary.yaml').returns(true)
-  end
-
-  describe 'when setting up the connection with https' do
     before do
+      u_processor.initialize_from_hash(unchanged.to_data_hash)
+    end
+
+    it 'should not parse report' do
+        u_processor.process
+        u_processor.expects(:parse_report).never
+    end
+
+    it 'should not post to url' do
+      u_processor.process
+      u_processor.expects(:send).never
+    end
+  end
+
+  context 'with an changed report' do
+    let(:changed) do
+      f = my_fixture 'report_changed.yaml'
+      YAML.load_file(f)
+    end
+    let(:c_processor) do
+      c_processor = Puppet::Transaction::Report.new('apply')
+      c_processor.extend(http_summary) 
+    end
+
+    before do
+      File.stubs(:exist?).with('/dev/null/http_summary.yaml').returns(true)
       YAML.stubs(:load_file).with('/dev/null/http_summary.yaml').returns(
         'url' => 'https://localhost:8888'
       )
-      http.expects(:post).returns(httpok)
+      c_processor.initialize_from_hash(changed.to_data_hash)
     end
 
-    it 'should send report via https' do
-      Puppet::Network::HttpPool.expects(:http_instance).with(
-        'localhost', 8888, true
-      ).returns http
-
-      processor.add_metric(:resources, resources)
-
-      processor.process
-    end
-  end
-
-  describe 'when setting up the connection with http' do
-    before do
-      YAML.stubs(:load_file).with('/dev/null/http_summary.yaml').returns(
-        'url' => 'http://localhost:8888'
-      )
-      http.expects(:post).returns(httpok)
-    end
-
-    it 'should send report via http' do
-      Puppet::Network::HttpPool.expects(:http_instance).with(
-        'localhost', 8888, false
-      ).returns http
-
-      processor.add_metric(:resources, resources)
-
-      processor.process
-    end
-  end
-
-  describe 'when parsing reports' do
-    it 'should return the right json object' do
-      processor.expects(:host).returns(host)
-      processor.expects(:time).returns(time)
-      processor.expects(:status).returns('changed')
-      processor.add_metric(:resources, resources)
-
-      response = {
-        'host'             => host,
-        'time'             => time,
-        'status'           => 'changed',
-        'totalResources'   => 178,
-        'changedResources' => 1,
-        'failedResources'  => 0
-      }
-
-      expect(processor.parse_report(processor)).to eq(response.to_json)
+    it 'should parse report' do
+      c_processor.process
+      c_processor.expects(:parse_report).with(c_processor)
     end
   end
 end
