@@ -63,6 +63,20 @@ describe http_summary do
       end
     end
 
+    describe 'when configuration file is not valid' do
+     before do
+        YAML.stubs(:load_file).with('/dev/null/http_summary.yaml').returns(
+          'not_url' => 'http://localhost:8888'
+        )
+        http.expects(:post).returns(httpok)
+      end
+
+      it 'should raise an error' do
+        expect{processor}.to raise_error(Puppet::ParseError)
+        processor.process
+      end
+    end
+
     describe 'when parsing reports' do
       it 'should return the right json object' do
         response = {
@@ -76,6 +90,25 @@ describe http_summary do
 
         expect(processor.parse_report(processor)).to eq(response.to_json)
       end
+    end
+  end
+
+  context 'when called with an unchanged report' do
+    let(:processor) do
+      processor = Puppet::Transaction::Report.new('apply')
+      processor.extend(http_summary)
+    end
+
+    before :each do
+      processor.initialize_from_hash(unchanged.to_data_hash)
+    end
+
+    it 'should not parse the report' do
+      processor.expects(:send).never
+    end
+
+    it 'should not port to url' do
+      processor.expects(:parse_report).never
     end
   end
 end

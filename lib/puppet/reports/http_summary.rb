@@ -12,7 +12,7 @@ Puppet::Reports.register_report(:http_summary) do
     begin
       config = YAML.load_file(configfile)
     rescue Psych::SyntaxError
-      raise Puppet::ParserError, "http_summary file #{configfile} is not valid YAML!"
+      raise Puppet::ParseError, "http_summary file #{configfile} is not valid YAML!"
     end
     config
   end
@@ -41,6 +41,8 @@ Puppet::Reports.register_report(:http_summary) do
 
   def send(message)
     url = URI.parse(read_config['url'])
+
+    raise Puppet::ParseError, "http_summary file #{configfile} is not valid YAML!" unless !url.nil?
 
     headers, options, use_ssl = calculate_defaults(url)
 
