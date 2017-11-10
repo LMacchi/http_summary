@@ -63,20 +63,6 @@ describe http_summary do
       end
     end
 
-    describe 'when configuration file is not valid' do
-     before do
-        YAML.stubs(:load_file).with('/dev/null/http_summary.yaml').returns(
-          'not_url' => 'http://localhost:8888'
-        )
-        http.expects(:post).returns(httpok)
-      end
-
-      it 'should raise an error' do
-        expect{processor}.to raise_error(Puppet::ParseError)
-        processor.process
-      end
-    end
-
     describe 'when parsing reports' do
       it 'should return the right json object' do
         response = {
