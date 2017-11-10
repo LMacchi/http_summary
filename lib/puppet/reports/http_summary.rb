@@ -27,7 +27,7 @@ Puppet::Reports.register_report(:http_summary) do
 
   def calculate_defaults(url)
     headers = { 'Content-Type' => 'application/json' }
-    options = { metric_id: [:puppet :report :http] }
+    options = { :metric_id => [:puppet :report :http] }
     if url.user && url.password
       options[:basic_auth] = {
         user: url.user,
