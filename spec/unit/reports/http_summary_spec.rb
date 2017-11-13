@@ -10,7 +10,7 @@ describe http_summary do
   end
   let(:changed) do
     f = my_fixture 'report_changed.yaml'
-    YAML.load File.new(f, "r")
+    YAML.load File.new(f, 'r')
   end
 
   let(:http) { stub_everything 'http' }
