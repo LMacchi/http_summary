@@ -1,0 +1,299 @@
+--- !ruby/object:Puppet::Transaction::Report
+host: laura.puppetlabs.vm
+time: '2017-11-09T21:12:50.020119928+00:00'
+configuration_version: 1510261969
+transaction_uuid: 60302bc0-bf31-40cc-baa3-6ce6f1894185
+report_format: 7
+puppet_version: 5.3.2
+status: failed
+noop: false
+noop_pending: false
+environment: production
+logs:
+- level: err
+  message: 'Could not set uid on user[test]: Execution of ''/sbin/usermod -u 0 test''
+    returned 4: usermod: UID ''0'' already exists'
+  source: Puppet
+  tags:
+  - err
+  time: '2017-11-09T21:12:50.113963433+00:00'
+  file: 
+  line: 
+- level: err
+  message: 'change from 1001 to 0 failed: Could not set uid on user[test]: Execution
+    of ''/sbin/usermod -u 0 test'' returned 4: usermod: UID ''0'' already exists'
+  source: "/Stage[main]/Main/User[test]/uid"
+  tags:
+  - err
+  - user
+  - test
+  - class
+  time: '2017-11-09T21:12:50.115574761+00:00'
+  file: "/root/test.pp"
+  line: 1
+- level: notice
+  message: Applied catalog in 0.12 seconds
+  source: Puppet
+  tags:
+  - notice
+  time: '2017-11-09T21:12:50.176924408+00:00'
+  file: 
+  line: 
+metrics:
+  resources:
+    name: resources
+    label: Resources
+    values:
+    - - total
+      - Total
+      - 8
+    - - skipped
+      - Skipped
+      - 0
+    - - failed
+      - Failed
+      - 1
+    - - failed_to_restart
+      - Failed to restart
+      - 0
+    - - restarted
+      - Restarted
+      - 0
+    - - changed
+      - Changed
+      - 0
+    - - out_of_sync
+      - Out of sync
+      - 1
+    - - scheduled
+      - Scheduled
+      - 0
+    - - corrective_change
+      - Corrective change
+      - 0
+  time:
+    name: time
+    label: Time
+    values:
+    - - user
+      - User
+      - 0.009728098
+    - - schedule
+      - Schedule
+      - 0.000641902
+    - - filebucket
+      - Filebucket
+      - 0.000135629
+    - - config_retrieval
+      - Config retrieval
+      - 0.076892289
+    - - total
+      - Total
+      - 0.087397918
+  changes:
+    name: changes
+    label: Changes
+    values:
+    - - total
+      - Total
+      - 0
+  events:
+    name: events
+    label: Events
+    values:
+    - - total
+      - Total
+      - 1
+    - - failure
+      - Failure
+      - 1
+    - - success
+      - Success
+      - 0
+resource_statuses:
+  User[test]:
+    title: test
+    file: "/root/test.pp"
+    line: 1
+    resource: User[test]
+    resource_type: User
+    containment_path:
+    - Stage[main]
+    - Main
+    - User[test]
+    evaluation_time: 0.009728098
+    tags:
+    - user
+    - test
+    - class
+    time: '2017-11-09T21:12:50.106013727+00:00'
+    failed: true
+    changed: false
+    out_of_sync: true
+    skipped: false
+    change_count: 0
+    out_of_sync_count: 1
+    events:
+    - audited: false
+      property: uid
+      previous_value: 1001
+      desired_value: 0
+      historical_value: 
+      message: 'change from 1001 to 0 failed: Could not set uid on user[test]: Execution
+        of ''/sbin/usermod -u 0 test'' returned 4: usermod: UID ''0'' already exists'
+      name: uid_changed
+      status: failure
+      time: '2017-11-09T21:12:50.114144316+00:00'
+      redacted: 
+      corrective_change: false
+    corrective_change: false
+  Schedule[puppet]:
+    title: puppet
+    file: 
+    line: 
+    resource: Schedule[puppet]
+    resource_type: Schedule
+    containment_path:
+    - Schedule[puppet]
+    evaluation_time: 0.000149369
+    tags:
+    - schedule
+    - puppet
+    time: '2017-11-09T21:12:50.116181434+00:00'
+    failed: false
+    changed: false
+    out_of_sync: false
+    skipped: false
+    change_count: 0
+    out_of_sync_count: 0
+    events: []
+    corrective_change: false
+  Schedule[hourly]:
+    title: hourly
+    file: 
+    line: 
+    resource: Schedule[hourly]
+    resource_type: Schedule
+    containment_path:
+    - Schedule[hourly]
+    evaluation_time: 0.000107211
+    tags:
+    - schedule
+    - hourly
+    time: '2017-11-09T21:12:50.116428409+00:00'
+    failed: false
+    changed: false
+    out_of_sync: false
+    skipped: false
+    change_count: 0
+    out_of_sync_count: 0
+    events: []
+    corrective_change: false
+  Schedule[daily]:
+    title: daily
+    file: 
+    line: 
+    resource: Schedule[daily]
+    resource_type: Schedule
+    containment_path:
+    - Schedule[daily]
+    evaluation_time: 8.7338e-05
+    tags:
+    - schedule
+    - daily
+    time: '2017-11-09T21:12:50.116677451+00:00'
+    failed: false
+    changed: false
+    out_of_sync: false
+    skipped: false
+    change_count: 0
+    out_of_sync_count: 0
+    events: []
+    corrective_change: false
+  Schedule[weekly]:
+    title: weekly
+    file: 
+    line: 
+    resource: Schedule[weekly]
+    resource_type: Schedule
+    containment_path:
+    - Schedule[weekly]
+    evaluation_time: 9.6877e-05
+    tags:
+    - schedule
+    - weekly
+    time: '2017-11-09T21:12:50.116854324+00:00'
+    failed: false
+    changed: false
+    out_of_sync: false
+    skipped: false
+    change_count: 0
+    out_of_sync_count: 0
+    events: []
+    corrective_change: false
+  Schedule[monthly]:
+    title: monthly
+    file: 
+    line: 
+    resource: Schedule[monthly]
+    resource_type: Schedule
+    containment_path:
+    - Schedule[monthly]
+    evaluation_time: 9.2504e-05
+    tags:
+    - schedule
+    - monthly
+    time: '2017-11-09T21:12:50.117097188+00:00'
+    failed: false
+    changed: false
+    out_of_sync: false
+    skipped: false
+    change_count: 0
+    out_of_sync_count: 0
+    events: []
+    corrective_change: false
+  Schedule[never]:
+    title: never
+    file: 
+    line: 
+    resource: Schedule[never]
+    resource_type: Schedule
+    containment_path:
+    - Schedule[never]
+    evaluation_time: 0.000108603
+    tags:
+    - schedule
+    - never
+    time: '2017-11-09T21:12:50.117281333+00:00'
+    failed: false
+    changed: false
+    out_of_sync: false
+    skipped: false
+    change_count: 0
+    out_of_sync_count: 0
+    events: []
+    corrective_change: false
+  Filebucket[puppet]:
+    title: puppet
+    file: 
+    line: 
+    resource: Filebucket[puppet]
+    resource_type: Filebucket
+    containment_path:
+    - Filebucket[puppet]
+    evaluation_time: 0.000135629
+    tags:
+    - filebucket
+    - puppet
+    time: '2017-11-09T21:12:50.117516974+00:00'
+    failed: false
+    changed: false
+    out_of_sync: false
+    skipped: false
+    change_count: 0
+    out_of_sync_count: 0
+    events: []
+    corrective_change: false
+corrective_change: false
+catalog_uuid: 8f744da8-e6d6-424b-b271-8117d4ed7039
+cached_catalog_status: not_used

@@ -4,52 +4,66 @@ require 'uri'
 require 'json'
 
 Puppet::Reports.register_report(:http_summary) do
-  desc "Process aggregated stats from a Puppet report and post them to HTTP"
+  desc 'Process aggregated stats from a Puppet report and post them to HTTP'
 
   def read_config
-    configfile = File.join([File.dirname(Puppet.settings[:config]), "http_summary.yaml"])
+    configfile = File.join([File.dirname(Puppet.settings[:config]), 'http_summary.yaml'])
     raise(Puppet::ParseError, "http_summary report config file #{configfile} not readable") unless File.exist?(configfile)
     begin
       config = YAML.load_file(configfile)
-    rescue TypeError => e
-      raise Puppet::ParserError, "http_summary file #{configfile} is not valid YAML!"
+    rescue Psych::SyntaxError
+      raise Puppet::ParseError, "http_summary file #{configfile} is not valid YAML!"
     end
     config
   end
 
   def process
-    config = read_config
-    url  = URI.parse(config['url'])
-    headers = { "Content-Type" => "application/json" }
+    status = !self.status.nil? ? self.status : 'undefined'
 
+    return unless %w[failed changed].include? status
+
+    send(parse_report(self))
+  end
+
+  def calculate_defaults(url)
+    headers = { 'Content-Type' => 'application/json' }
     options = { :metric_id => [:puppet, :report, :http] }
     if url.user && url.password
       options[:basic_auth] = {
-        :user => url.user,
-        :password => url.password
+        user: url.user,
+        password: url.password
       }
     end
     use_ssl = url.scheme == 'https'
-    
-    self.status != nil ? status = self.status : status = 'undefined'
 
-    if ['failed','changed'].include? status
-    
-      processed_report = parse_report(self)
+    [headers, options, use_ssl]
+  end
 
-      conn = Puppet::Network::HttpPool.http_instance(url.host, url.port, use_ssl)
-      response = conn.post(url.path, processed_report, headers, options)
+  def send(message)
+    config = read_config
+    uri = config['url']
 
-      if ! response.kind_of?(Net::HTTPSuccess)
-        Puppet.err "Unable to submit report to #{url.to_s} - error #{response.code}: #{response.msg}"
-      else
-        Puppet.notice "Report successfully sent to #{url.to_s}"
-      end
+    raise Puppet::ParseError, 'Could not find valid url in configuration file' unless !uri.nil?
+
+    begin
+      url = URI.parse(uri)
+    rescue URI::InvalidURIError, URI::BadURIError
+      raise Puppet::ParseError, 'Could not find valid url in configuration file'
+    end
+
+    headers, options, use_ssl = calculate_defaults(url)
+
+    conn = Puppet::Network::HttpPool.http_instance(url.host, url.port, use_ssl)
+    response = conn.post(url.path, message, headers, options)
+
+    if !response.is_a?(Net::HTTPSuccess)
+      Puppet.err "Unable to submit report to #{url} - error #{response.code}: #{response.msg}"
+    else
+      Puppet.notice "Report successfully sent to #{url}"
     end
   end
 
   def parse_report(report)
-    metrics = {}
     body = {}
 
     body['host'] = report.host
@@ -59,6 +73,6 @@ Puppet::Reports.register_report(:http_summary) do
     body['changedResources'] = report.metrics['resources']['changed']
     body['failedResources'] = report.metrics['resources']['failed']
 
-    return body.to_json
+    body.to_json
   end
 end
