@@ -18,9 +18,11 @@ Puppet::Reports.register_report(:http_summary) do
   end
 
   def process
+    @config = read_config
     status = !self.status.nil? ? self.status : 'undefined'
+    statuses = !@config['status'].nil? ? @config['status'] : ['never']
 
-    return unless %w[failed changed].include? status
+    return unless statuses.include? status
 
     send(parse_report(self))
   end
@@ -40,8 +42,7 @@ Puppet::Reports.register_report(:http_summary) do
   end
 
   def send(message)
-    config = read_config
-    uri = config['url']
+    uri = @config['url']
 
     raise Puppet::ParseError, 'Could not find valid url in configuration file' unless !uri.nil?
 
