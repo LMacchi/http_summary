@@ -32,7 +32,8 @@ describe http_summary do
     describe 'when setting up the connection with https' do
       before do
         YAML.stubs(:load_file).with('/dev/null/http_summary.yaml').returns(
-          'url' => 'https://localhost:8888'
+          'url'    => 'https://localhost:8888',
+          'status' => ['changed'] 
         )
         http.expects(:post).returns(httpok)
       end
@@ -49,7 +50,8 @@ describe http_summary do
     describe 'when setting up the connection with http' do
      before do
         YAML.stubs(:load_file).with('/dev/null/http_summary.yaml').returns(
-          'url' => 'http://localhost:8888'
+          'url'    => 'http://localhost:8888',
+          'status' => ['changed'] 
         )
         http.expects(:post).returns(httpok)
       end
