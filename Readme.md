@@ -18,12 +18,16 @@ there are changes or failures
 reports = puppetdb,http_summary
 ```
 
-- Place a file in $confdir/http_summary.yaml containing url to connect to:
+- Place a file in $confdir/http_summary.yaml containing url to connect to and
+a list of report status to notify to:
 
 ```
 root@puppet::master /root> cat /etc/puppetlabs/puppet/http_summary.yaml
 ---
-url: "http://localhost:8888"
+url: 'http://localhost:8888'
+status:
+  - 'changed'
+  - 'failed'
 ```
 
 - Run puppet agent in the master
