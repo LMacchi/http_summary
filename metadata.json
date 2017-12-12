@@ -1,0 +1,17 @@
+{
+  "name": "laura/http_summary",
+  "version": "0.1.0",
+  "author": "laura",
+  "summary": "Send Puppet run summary in JSON via HTTP",
+  "license": "Apache-2.0",
+  "source": "https://github.com/LMacchi/http_summary",
+  "project_page": "https://github.com/LMacchi/http_summary",
+  "issues_url": "https://github.com/LMacchi/http_summary",
+  "dependencies": [],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.0.0 < 5.0.0"
+    }
+  ]
+}
